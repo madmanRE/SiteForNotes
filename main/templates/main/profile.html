@@ -1,0 +1,26 @@
+{% extends 'layout/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div>
+    <h3>
+        {{profile.username}}
+    </h3>
+    <p>
+        Кол-во активных заметок: {{profile.count_notes}}
+    </p>
+</div>
+<div>
+    <img src="{{ profile.avatar.url }}" width="50%" style="margin:10%; border-radius: 20px;">
+</div>
+<div>
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        {% bootstrap_form form layout='inline' size='small' %}
+        {% if button_value %}
+        <input type="submit" value="{{button_value}}">
+        {% else %}
+        <input type="submit" value="Зарегистрироваться">
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

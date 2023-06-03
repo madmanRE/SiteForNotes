@@ -1,0 +1,15 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h3>Вы уже выполнили вход</h3>
+<a href="{% url 'main:logout' %}">Выход</a>
+{% else %}
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="hidden" name="next" value="{{next}}">
+    <button type="submit">Отправить</button>
+</form>
+{%endif%}
+{% endblock %}

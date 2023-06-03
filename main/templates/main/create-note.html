@@ -1,0 +1,15 @@
+{% extends 'layout/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+{% if button_value == "Удалить" %}
+<h3>Уверены что хотите удалить запись?</h3>
+{% endif %}
+<div style="width:500px;">
+<form method="post">{% csrf_token %}
+    {% bootstrap_form form layout='inline' size='small' %}
+    <input type="submit" value="{{button_value}}">
+</form>
+</div>
+{% endblock %}
+

@@ -1,0 +1,61 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        {% if notes %}
+        {% for note in notes %}
+        <div class="col-md-6">
+            <div class="note-preview card p-4"
+                 style="max-width: 500px; overflow: auto; margin-top: 15px; height: 250px;">
+                <h2 class="card-title" style="background-color: {{note.color}}; border-radius: 10px; padding: 10px">{{ note.title }}</h2>
+                <div class="note-content">
+                    <p>
+                        <span class="truncated-text">{{ note.text|truncatechars:100 }}</span>
+                        <span class="full-text" style="display: none">{{ note.text }}</span>
+                    </p>
+                </div>
+                <hr class="card-divider">
+                <div class="card-footer">
+                    <a href="{% url 'main:update_note' pk=note.pk %}" class="btn btn-primary">Изменить</a>
+                    <a href="{% url 'main:delete_note' pk=note.pk %}" class="btn btn-danger">Удалить</a>
+                    <a href="#" class="btn btn-success" onclick="toggleText(event)">Читать</a>
+                    <a href="{% url 'main:list_notes' pk=request.user.profile.pk %}?theme={{note.theme.title}}" style="margin-left:5%; color: black;">{{note.theme.title}}</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h3 style="color:red; margin-top:50px;">В этой рубрике пока нет заметок...</h3>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function toggleText(event) {
+        event.preventDefault();
+        var button = event.target;
+        var card = button.closest('.note-preview');
+        var noteContent = card.querySelector('.note-content');
+        var truncatedText = card.querySelector('.truncated-text');
+        var fullText = card.querySelector('.full-text');
+        card.classList.toggle('expanded');
+
+        if (card.classList.contains('expanded')) {
+            noteContent.style.height = 'auto';
+            truncatedText.style.display = 'none';
+            fullText.style.display = 'inline';
+            button.textContent = 'Свернуть';
+        } else {
+            noteContent.style.height = '250px'; // Установите желаемую высоту здесь
+            truncatedText.style.display = 'inline';
+            fullText.style.display = 'none';
+            button.textContent = 'Читать';
+        }
+    }
+
+
+</script>
+
+
+{% endblock %}

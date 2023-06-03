@@ -1,0 +1,147 @@
+{% load static %}
+{% load bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% bootstrap_messages %}
+    <title>
+        {% block title %}Базовый шаблон{% endblock %}
+    </title>
+</head>
+<body>
+<header>
+    <div class="bg-secondary">
+        <div style="margin-left: 15%; margin-right: 10%">
+            <div class="d-flex align-items-center">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item me-4">
+                        <a href="/">
+                            <img src="https://cdn-icons-png.flaticon.com/512/4632/4632151.png" width="100px"
+                                 style="margin-left: 5%; margin-bottom: 2px;">
+                        </a>
+                    </li>
+                    <li class="list-inline-item me-4">
+                        <a href="/">
+                            <span class="text-white fs-5">Главная</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item me-4">
+                        <a href="{% url 'main:list_notes' pk=request.user.profile.pk %}">
+                            <span class="text-white fs-5">Заметки</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item me-4">
+                        <a href="{% url 'main:note-list' %}">
+                            <span class="text-white fs-5">Перейти к API</span>
+                        </a>
+                    </li>
+                    {% if request.user.is_authenticated %}
+                    <li class="list-inline-item me-4">
+                        <a href="{% url 'main:update_profile' pk=request.user.profile.pk %}">
+                            <span class="text-white fs-5">Профиль</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item me-4">
+                        <a href="{% url 'main:logout' %}">
+                            <span class="text-white fs-5">Выход</span>
+                        </a>
+                    </li>
+                    {% if request.user.is_staff or request.user.is_superuser %}
+                    <li class="list-inline-item me-4">
+                        <a href="/admin/">
+                            <span class="text-white fs-5">Административный раздел</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% else %}
+                    <li class="list-inline-item me-4">
+                        <a href="{% url 'main:login' %}">
+                            <span class="text-white fs-5">Вход</span>
+                        </a>
+                    </li>
+                    <li class="list-inline-item me-4">
+                        <a href="{% url 'main:register' %}">
+                            <span class="text-white fs-5">Регистрация</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                    <li class="list-inline-item me-4"><a
+                            href="{% url 'main:update_profile' pk=request.user.profile.pk %}">
+                        <img src="{{request.user.profile.avatar.url}}" width="100px"
+                             style="border-radius: 50%; margin-left: 5%; margin-bottom: 2px; box-shadow: 0 0 10px 5px rgba(0, 255, 0, 0.5);"></a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+</header>
+<hr>
+<div class="container">
+    <div class="row">
+        <div class="col-2" style="background-color: #343a40; color: white;">
+            <div style="display: flex; justify-content: center; margin-top: 15%">
+                <ul style="list-style: none; padding: 0;">
+                    {% if request.user.is_authenticated %}
+                    {% for theme in themes %}
+                    <li><a href="{% url 'main:list_notes' pk=request.user.profile.pk %}?theme={{theme.title}}"
+                           style="font-size: 20px; color: white;">
+                        {{ theme.title }}</a></li>
+                    {% endfor %}
+                    <li><a href="{% url 'main:list_notes' pk=request.user.profile.pk %}"
+                           style="font-size: 20px; color: white;">
+                        Все заметки</a></li>
+                    {% else %}
+                    {% for theme in themes %}
+                    <li><a href="#"
+                           style="font-size: 20px; color: white;">
+                        {{ theme.title }}</a></li>
+                    {% endfor %}
+                    <li><a href="#"
+                           style="font-size: 20px; color: white;">
+                        Все заметки</a></li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                    <li style="margin-top: 10px;">
+                        <button class="btn btn-success rounded">
+                            <a href="{% url 'main:create_note' pk=request.user.profile.pk %}"
+                               style="font-size: 20px; color: white; text-decoration: none;">Создать заметку</a>
+                        </button>
+                    </li>
+                    {% else %}
+                    <li style="margin-top: 10px;">
+                        <button class="btn btn-success rounded">
+                            <a href="{% url 'main:login' %}"
+                               style="font-size: 20px; color: white; text-decoration: none;">Войти в профиль</a>
+                        </button>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+
+        </div>
+        <div class="col-10" style="background-color: Silver; height: 780px;">
+            {% block content %}
+            <h1 style="text-align:center">Сайт для заметок!</h1>
+            <p></p>
+            <p></p>
+            <p></p>
+            <hr>
+            <img src="https://img.freepik.com/free-psd/horizontal-banner-template-for-event-planner_23-2149072757.jpg?w=1380&t=st=1685768385~exp=1685768985~hmac=0a3ce3b771ed026d7cb08767f7bb4ad3c385d6d45668d6794f4f1c14031ac1e6"
+                 width="100%" style="border-radius: 15px">
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
